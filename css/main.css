@@ -1,0 +1,59 @@
+body {
+    background: #888;
+}
+
+/* Board */
+#board {
+    border: 3px solid #ccc;
+    height: 224px;
+    margin: 20px auto;
+    position: relative;
+    width: 224px;
+}
+
+/* Fields */
+.field {
+    background: #666;
+    border: 1px solid #ccc;
+    float: left;
+    height: 30px;
+    width: 30px;
+}
+
+/* Players */
+.player {
+    height: 32px;
+    position: absolute;
+    width: 32px;
+    z-index: 2;
+}
+
+.player div {
+    height: 22px;
+    margin: 3px 0 0 3px;
+    width: 22px;
+}
+
+.player.p0 div { border: 2px solid #fff; }
+.player.p1 div { border: 2px solid #000; }
+
+#board.p0 .player.p0 { cursor: pointer; }
+#board.p1 .player.p1 { cursor: pointer; }
+
+/* Balls */
+.ball {
+    height: 32px;
+    position: absolute;
+    width: 32px;
+    z-index: 1;
+}
+
+.ball div {
+    border-radius: 9px;
+    height: 14px;
+    margin: 7px 0 0 7px;
+    width: 14px;
+}
+
+.ball.p0 div { border: 2px solid #fff; }
+.ball.p1 div { border: 2px solid #000; }
