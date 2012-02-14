@@ -1,10 +1,43 @@
 body {
     background: #888;
+    font: 10px Arial;
 }
 
 #container {
     margin: 20px auto;
+    position: relative;
     width: 230px;
+}
+
+/* Turn data */
+.turn, #endturn {
+    position: absolute;
+    right: -110px;
+    width: 100px;
+}
+
+.turn span {
+    margin-left: 10px;
+}
+
+.turn.p0 {
+    bottom: 0;
+    color: #fff;
+}
+
+.turn.p1 {
+    color: #000;
+    top: 0;
+}
+
+#container.p1 .turn.p0,
+#container.p0 .turn.p1 {
+    opacity: .2;
+}
+
+#endturn {
+    outline: none;
+    top: 110px;
 }
 
 /* Board */
@@ -43,8 +76,8 @@ body {
 
 .piece.active div { border-color: #0af; }
 
-#board.p0 .piece.p0,
-#board.p1 .piece.p1,
+#container.p0 .piece.p0,
+#container.p1 .piece.p1,
 .piece.helper { cursor: pointer; }
 
 .piece.helper div { border: 2px solid #a50; }

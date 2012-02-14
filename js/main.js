@@ -1,6 +1,6 @@
 $(function() {
-    var $board = $('#board').live('contextmenu', function(){return false;}),
-        $pieces,
+    var $board = $('#board'),
+        $container = $('#container'),
         fields = [],
         pieces = [],
         currentPlayerId = 0,
@@ -11,7 +11,7 @@ $(function() {
         t = {
             helper: {
                 piece: '<div class="piece helper"><div></div></div>',
-                ball: '<div class="ball helper"><div></div></div>',
+                ball: '<div class="ball helper"><div></div></div>'
             }
         };
 
@@ -52,6 +52,9 @@ $(function() {
 
         $board
             .html(html)
+            .bind('contextmenu', function() {
+                return false;
+            })
             .mouseup(function(e) {
                 if (e.which === 3) {
                     hideHelpers();
@@ -68,8 +71,7 @@ $(function() {
         var playerId = parseInt(this.id.substr(-2, 1));
 
         if (playerId !== currentPlayerId) {
-            return true
-            ;
+            return true;
         }
 
         currentPieceId = parseInt(this.id.substr(-1, 1));
@@ -77,7 +79,7 @@ $(function() {
         showHelpers(playerId, currentPieceId);
     }
     
-    function doMove(e) {
+    function doMove() {
         var $helper = $(this), $piece,
             piece, x, y, moves;
 
@@ -106,6 +108,7 @@ $(function() {
                     }
                 
                     passesLeft--;
+                    updateTurnData({passes: passesLeft});
                     checkTurnOver();
                 }
             });
@@ -126,6 +129,7 @@ $(function() {
                 duration: 300,
                 complete: function() {
                     movesLeft -= moves;
+                    updateTurnData({moves: movesLeft});
                     checkTurnOver();
                 }
             });
@@ -203,6 +207,12 @@ $(function() {
         $('.piece, .ball').removeClass('active');
         $('.helper').remove();
     }
+
+    function updateTurnData(values) {
+        $.each(values, function(name, value) {
+            $('.turn.p' + currentPlayerId + ' .' + name).text(value);
+        });
+    }
     
     function checkTurnOver() {
         if (movesLeft === 0 && passesLeft === 0) {
@@ -212,10 +222,16 @@ $(function() {
     
     function endTurn() {
         hideHelpers();
-        $board.toggleClass('p0 p1');
+
+        $container.toggleClass('p0 p1');
+
+        updateTurnData({passes: 0, moves: 0});
+
         currentPlayerId = currentPlayerId ? 0 : 1;
+
         movesLeft = 2;
         passesLeft = 1;
+        updateTurnData({passes: passesLeft, moves: movesLeft});
     }
     
     function endGame() {
@@ -223,7 +239,8 @@ $(function() {
         
         console.log(winner + ' WINS!');
         
-        $board.removeClass('p0 p1');
+        $container.removeClass('p0 p1');
+        currentPlayerId = -1;
     }
 
     initBoard();

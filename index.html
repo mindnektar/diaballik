@@ -6,9 +6,24 @@
     <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body>
-<div id="container">
-    <div id="board" class="p0"></div>
-    <button id="endturn">End turn</button>
+<div id="container" class="p0">
+    <div id="board"></div>
+
+    <div class="turn p1">
+        <strong>Moves left:</strong><br />
+        <span class="moves">0</span><br /><br />
+        <strong>Passes left:</strong><br />
+        <span class="passes">0</span>
+    </div>
+
+    <div class="turn p0">
+        <strong>Moves left:</strong><br />
+        <span class="moves">2</span><br /><br />
+        <strong>Passes left:</strong><br />
+        <span class="passes">1</span>
+    </div>
+    
+    <a id="endturn" href="javascript:;">End turn</a>
 </div>
 </body>
 </html>
