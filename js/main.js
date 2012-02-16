@@ -44,10 +44,10 @@ $(function() {
                 
                 fields[y][j].occupied = i;
 
-                html += '<div class="piece p' + i + '" id="piece' + i + j + '" style="left: ' + (j * 32) + 'px; top: ' + (y * 32) + 'px;"><div></div></div>';
+                html += '<div class="piece p' + i + '" id="piece' + i + j + '" style="left: ' + (j * 64) + 'px; top: ' + (y * 64) + 'px;"><div></div></div>';
             }
 
-            html += '<div class="ball p' + i + '" id="ball' + i + '" style="left: 96px; top: ' + (y * 32) + 'px;"><div></div></div>';
+            html += '<div class="ball p' + i + '" id="ball' + i + '" style="left: 192px; top: ' + (y * 64) + 'px;"><div></div></div>';
         }
 
         $board
@@ -89,16 +89,16 @@ $(function() {
             .removeClass('active');
         
         piece = pieces[currentPlayerId][currentPieceId];
-        x = parseInt($helper.css('left')) / 32;
-        y = parseInt($helper.css('top')) / 32;
+        x = parseInt($helper.css('left')) / 64;
+        y = parseInt($helper.css('top')) / 64;
         
         if ($helper.hasClass('ball')) {
             piece.carrier = false;
             pieces[currentPlayerId][parseInt($helper.attr('data-id'))].carrier = true;
             
             $('#ball' + currentPlayerId).animate({
-                left: x * 32,
-                top: y * 32
+                left: x * 64,
+                top: y * 64
             }, {
                 duration: 300,
                 complete: function() {
@@ -123,8 +123,8 @@ $(function() {
             fields[piece.y][piece.x].occupied = currentPlayerId;
             
             $piece.animate({
-                left: x * 32,
-                top: y * 32
+                left: x * 64,
+                top: y * 64
             }, {
                 duration: 300,
                 complete: function() {
@@ -138,7 +138,7 @@ $(function() {
     
     function showHelpers(playerId, pieceId) {
         var piece = pieces[playerId][pieceId],
-            i, j, diffx, diffy;
+            i, j, diffx, diffy, x, y;
         
         hideHelpers();
 
@@ -171,8 +171,8 @@ $(function() {
                         
                         $(t.helper.ball)
                             .css({
-                                left: p.x * 32,
-                                top: p.y * 32
+                                left: p.x * 64,
+                                top: p.y * 64
                             })
                             .attr('data-id', id)
                             .appendTo($board);
@@ -186,18 +186,32 @@ $(function() {
             
             $('#piece' + currentPlayerId + currentPieceId).addClass('active');
             
-            for (i = piece.x - movesLeft; i <= piece.x + movesLeft; i++) {
-                for (j = piece.y - movesLeft; j <= piece.y + movesLeft; j++) {
-                    if (Math.abs(piece.x - i) + Math.abs(piece.y - j) > movesLeft) {
+            for (i = piece.y - movesLeft; i <= piece.y + movesLeft; i++) {
+                for (j = piece.x - movesLeft; j <= piece.x + movesLeft; j++) {
+                    diffx = Math.abs(piece.x - j);
+                    diffy = Math.abs(piece.y - i);
+
+                    if (diffx + diffy > movesLeft) {
                         continue;
                     }
                     
-                    if (fields[j] && fields[j][i] && fields[j][i].occupied === false) {
-                        $(t.helper.piece).css({
-                            left: i * 32,
-                            top: j * 32
-                        }).appendTo($board);
+                    if (!fields[i] || !fields[i][j] || fields[i][j].occupied !== false) {
+                        continue;
                     }
+
+                    if (diffx === 2 || diffy === 2) {
+                        x = piece.x / 2 + j / 2;
+                        y = piece.y / 2 + i / 2;
+
+                        if (!fields[y] || !fields[y][x] || fields[y][x].occupied !== false) {
+                            continue;
+                        }
+                    }
+
+                    $(t.helper.piece).css({
+                        left: j * 64,
+                        top: i * 64
+                    }).appendTo($board);
                 }
             }
         }

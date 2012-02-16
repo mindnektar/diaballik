@@ -1,23 +1,30 @@
 body {
     background: #888;
-    font: 10px Arial;
+    font: 20px sans-serif,Arial;
 }
 
 #container {
     margin: 20px auto;
     position: relative;
-    width: 230px;
+    width: 460px;
 }
 
 /* Turn data */
-.turn, #endturn {
+#turndata {
+    height: 460px;
     position: absolute;
-    right: -110px;
-    width: 100px;
+    right: -220px;
+    top: 0;
+    width: 200px;
+}
+
+.turn,
+#endturn {
+    position: absolute;
 }
 
 .turn span {
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
 .turn.p0 {
@@ -36,43 +43,68 @@ body {
 }
 
 #endturn {
+    background: #999;
+    border: 2px solid #ccc;
+    color: #ccc;
     outline: none;
-    top: 110px;
+    padding: 3px;
+    text-align: center;
+    text-decoration: none;
+    top: 220px;
+    width: 110px;
+}
+
+#endturn:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+#turndata .border {
+    background: #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #000;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    width: 6px;
 }
 
 /* Board */
 #board {
-    border: 3px solid #ccc;
-    height: 224px;
+    border: 6px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #000;
+    height: 448px;
     position: relative;
-    width: 224px;
+    width: 448px;
 }
 
 /* Fields */
 .field {
     background: #666;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     float: left;
-    height: 30px;
-    width: 30px;
+    height: 60px;
+    width: 60px;
 }
 
 /* Pieces */
 .piece {
-    height: 32px;
+    height: 64px;
     position: absolute;
-    width: 32px;
+    width: 64px;
     z-index: 2;
 }
 
 .piece div {
-    height: 22px;
-    margin: 3px 0 0 3px;
-    width: 22px;
+    box-shadow: 0 0 4px #333;
+    height: 44px;
+    margin: 6px 0 0 6px;
+    width: 44px;
 }
 
-.piece.p0 div { border: 2px solid #fff; }
-.piece.p1 div { border: 2px solid #000; }
+.piece.p0 div { border: 4px solid #fff; }
+.piece.p1 div { border: 4px solid #000; }
 
 .piece.active div { border-color: #0af; }
 
@@ -80,25 +112,29 @@ body {
 #container.p1 .piece.p1,
 .piece.helper { cursor: pointer; }
 
-.piece.helper div { border: 2px solid #a50; }
+.piece.helper div {
+    border: 4px solid #d69001;
+    box-shadow: none;
+}
 
 /* Balls */
 .ball {
-    height: 32px;
+    height: 64px;
     position: absolute;
-    width: 32px;
+    width: 64px;
     z-index: 1;
 }
 
 .ball div {
-    border-radius: 9px;
-    height: 14px;
-    margin: 7px 0 0 7px;
-    width: 14px;
+    border-radius: 18px;
+    box-shadow: 0 0 4px #333;
+    height: 28px;
+    margin: 14px 0 0 14px;
+    width: 28px;
 }
 
-.ball.p0 div { border: 2px solid #fff; }
-.ball.p1 div { border: 2px solid #000; }
+.ball.p0 div { border: 4px solid #fff; }
+.ball.p1 div { border: 4px solid #000; }
 
 .ball.active div { border-color: #0af; }
 
@@ -107,4 +143,7 @@ body {
     z-index: 3;
 }
 
-.ball.helper div { border: 2px solid #a50; }
+.ball.helper div {
+    border: 4px solid #d69001;
+    box-shadow: none;
+}
