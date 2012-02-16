@@ -185,35 +185,34 @@ $(function() {
             }
             
             $('#piece' + currentPlayerId + currentPieceId).addClass('active');
-            
-            for (i = piece.y - movesLeft; i <= piece.y + movesLeft; i++) {
-                for (j = piece.x - movesLeft; j <= piece.x + movesLeft; j++) {
-                    diffx = Math.abs(piece.x - j);
-                    diffy = Math.abs(piece.y - i);
 
-                    if (diffx + diffy > movesLeft) {
-                        continue;
-                    }
-                    
-                    if (!fields[i] || !fields[i][j] || fields[i][j].occupied !== false) {
-                        continue;
-                    }
+            function checkFields(x, y, stepsToGo) {
+		var i, j;
 
-                    if (diffx === 2 || diffy === 2) {
-                        x = piece.x / 2 + j / 2;
-                        y = piece.y / 2 + i / 2;
-
-                        if (!fields[y] || !fields[y][x] || fields[y][x].occupied !== false) {
+                for (j = y - 1; j <= y + 1; j++) {
+                    for (i = x - 1; i <= x + 1; i++) {
+                        // Allow only horizontal and vertical movement
+                        if (Math.abs(y - j) === Math.abs(x - i) || (i === x && j === y)) {
                             continue;
                         }
-                    }
 
-                    $(t.helper.piece).css({
-                        left: j * 64,
-                        top: i * 64
-                    }).appendTo($board);
+                        if (!fields[j] || !fields[j][i] || fields[j][i].occupied !== false) {
+                            continue;
+                        }
+
+                        $(t.helper.piece).css({
+                            left: i * 64,
+                            top: j * 64
+                        }).appendTo($board);
+
+                        if (stepsToGo) {
+                            checkFields(i, j, stepsToGo - 1);
+                        }
+                    }
                 }
             }
+
+            checkFields(piece.x, piece.y, movesLeft - 1);
         }
     }
     
