@@ -307,11 +307,27 @@ $(function() {
     }
     
     function endGame(playerId) {
-        var winner = playerId ? 'BLACK' : 'WHITE';
-        
-        console.log(winner + ' WINS!');
-        
+        var $winner = $('.winner'),
+            $left = $('.left', $winner),
+            $right = $('.right', $winner),
+            winner = playerId ? 'BLACK' : 'WHITE',
+            text = winner + ' WINS!';
+
         $container.removeClass('p0 p1');
+        $winner.addClass('p' + playerId);
+
+        $left
+            .text(text)
+            .animate({
+                left: window.innerWidth / 2 - $left.width() / 2 - 2
+            }, 800);
+
+        $right
+            .text(text)
+            .animate({
+                right: window.innerWidth / 2 - $right.width() / 2 - 2
+            }, 800);
+
         currentPlayerId = -1;
     }
 

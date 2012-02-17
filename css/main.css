@@ -1,6 +1,7 @@
 body {
     background: #888;
     font: 20px sans-serif,Arial;
+    overflow: hidden;
 }
 
 #container {
@@ -152,4 +153,45 @@ body {
 .ball.helper div {
     border: 4px solid #d69001;
     box-shadow: none;
+}
+
+/* Winner texts */
+.winner {
+    font-size: 60px;
+    font-style: italic;
+    font-weight: bold;
+    text-shadow: 0 0 10px #000;
+}
+
+.winner div {
+    position: absolute;
+}
+
+.winner .right {
+    right: -1000px;
+    top: 220px;
+    z-index: 10;
+}
+
+.winner .left {
+    left: -1000px;
+    top: 216px;
+    z-index: 11;
+}
+
+.winner.p0 .left {
+    color: #fff;
+}
+
+.winner.p0 .right {
+    color: #aaa;
+}
+
+.winner.p1 .left {
+    color: #000;
+    text-shadow: 0 0 10px #333;
+}
+
+.winner.p1 .right {
+    color: #777;
 }
