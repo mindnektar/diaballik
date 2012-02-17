@@ -23,7 +23,7 @@ $(function() {
 
             for (j = 0; j < 7; j++) {
                 fields[i].push({
-                    occupied: false
+                    occupiedBy: null
                 });
 
                 html += '<div class="field" id="field' + i + j + '"></div>';
@@ -42,7 +42,7 @@ $(function() {
                     carrier: j === 3
                 });
                 
-                fields[y][j].occupied = i;
+                fields[y][j].occupiedBy = i;
 
                 html += '<div class="piece p' + i + '" id="piece' + i + j + '" style="left: ' + (j * 64) + 'px; top: ' + (y * 64) + 'px;"><div></div></div>';
             }
@@ -103,7 +103,7 @@ $(function() {
                 duration: 300,
                 complete: function() {
                     if ((currentPlayerId === 0 && y === 0) || (currentPlayerId === 1 && y === 6)) {
-                        endGame();
+                        endGame(currentPlayerId);
                         return false;
                     }
                 
@@ -115,12 +115,12 @@ $(function() {
         } else {
             moves = Math.abs(x - piece.x) + Math.abs(y - piece.y);
 
-            fields[piece.y][piece.x].occupied = false;
+            fields[piece.y][piece.x].occupiedBy = null;
             
             piece.x = x;
             piece.y = y;
 
-            fields[piece.y][piece.x].occupied = currentPlayerId;
+            fields[piece.y][piece.x].occupiedBy = currentPlayerId;
             
             $piece.animate({
                 left: x * 64,
@@ -156,7 +156,7 @@ $(function() {
                     
                     if (diffx === diffy || diffx === 0 || diffy === 0) {
                         for (i = p.x - piece.x, j = p.y - piece.y; i !== 0 || j !== 0;) {
-                            if (fields[j + piece.y][i + piece.x].occupied === (currentPlayerId === 0 ? 1 : 0)) {
+                            if (fields[j + piece.y][i + piece.x].occupiedBy === (currentPlayerId === 0 ? 1 : 0)) {
                                 return true;
                             }
                             
@@ -187,7 +187,7 @@ $(function() {
             $('#piece' + currentPlayerId + currentPieceId).addClass('active');
 
             function checkFields(x, y, stepsToGo) {
-		var i, j;
+		        var i, j;
 
                 for (j = y - 1; j <= y + 1; j++) {
                     for (i = x - 1; i <= x + 1; i++) {
@@ -196,7 +196,7 @@ $(function() {
                             continue;
                         }
 
-                        if (!fields[j] || !fields[j][i] || fields[j][i].occupied !== false) {
+                        if (!fields[j] || !fields[j][i] || fields[j][i].occupiedBy !== null) {
                             continue;
                         }
 
@@ -245,10 +245,55 @@ $(function() {
         movesLeft = 2;
         passesLeft = 1;
         updateTurnData({passes: passesLeft, moves: movesLeft});
+
+        checkBlockade();
+    }
+
+    function checkBlockade()
+    {
+        var ypos = [[], []],
+            doCheck = [true, true],
+            i, j, occupiedBy, blockade, enemyAdjacent;
+
+        for (i = 0; i < 7; i++) {
+            for (j = 0; j < 7; j++) {
+                occupiedBy = fields[i][j].occupiedBy;
+
+                if (occupiedBy !== null) {
+                    if (ypos[occupiedBy] && typeof ypos[occupiedBy][j] !== 'undefined') {
+                        doCheck[occupiedBy] = false;
+                    } else {
+                        ypos[occupiedBy][j] = i;
+                    }
+                }
+            }
+        }
+
+        for (i = 0; i < 2; i++) {
+            blockade = 1;
+            enemyAdjacent = 0;
+
+            if (doCheck[i]) {
+                for (j = 0; j < 7; j++) {
+                    if (typeof ypos[i][j + 1] !== 'undefined' && Math.abs(ypos[i][j] - ypos[i][j + 1]) <= 1) {
+                        blockade++;
+                    }
+
+                    if (fields[ypos[i][j] + 1] && fields[ypos[i][j] + 1][j].occupiedBy === (i === 0 ? 1 : 0)
+                     || fields[ypos[i][j] - 1] && fields[ypos[i][j] - 1][j].occupiedBy === (i === 0 ? 1 : 0)) {
+                        enemyAdjacent++;
+                    }
+
+                    if (blockade === 7 && enemyAdjacent >= 3) {
+                        return endGame(i === 0 ? 1 : 0);
+                    }
+                }
+            }
+        }
     }
     
-    function endGame() {
-        var winner = currentPlayerId ? 'BLACK' : 'WHITE';
+    function endGame(playerId) {
+        var winner = playerId ? 'BLACK' : 'WHITE';
         
         console.log(winner + ' WINS!');
         
