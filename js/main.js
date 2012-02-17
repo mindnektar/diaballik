@@ -1,6 +1,7 @@
 $(function() {
     var $board = $('#board'),
         $container = $('#container'),
+        $endTurn = $('#endturn'),
         fields = [],
         pieces = [],
         currentPlayerId = 0,
@@ -63,8 +64,16 @@ $(function() {
             });
 
         $('.piece').mouseup(startMove);
+
         $('.helper').live('mouseup', doMove);
-        $('#endturn').click(endTurn);
+
+        $endTurn.click(function() {
+            if ($(this).hasClass('disabled')) {
+                return false;
+            }
+
+            endTurn();
+        });
     }
 
     function startMove() {
@@ -222,6 +231,8 @@ $(function() {
     }
 
     function updateTurnData(values) {
+        $endTurn.toggleClass('disabled', Boolean(passesLeft));
+
         $.each(values, function(name, value) {
             $('.turn.p' + currentPlayerId + ' .' + name).text(value);
         });
@@ -279,8 +290,11 @@ $(function() {
                         blockade++;
                     }
 
-                    if (fields[ypos[i][j] + 1] && fields[ypos[i][j] + 1][j].occupiedBy === (i === 0 ? 1 : 0)
-                     || fields[ypos[i][j] - 1] && fields[ypos[i][j] - 1][j].occupiedBy === (i === 0 ? 1 : 0)) {
+                    if (fields[ypos[i][j] + 1] && fields[ypos[i][j] + 1][j].occupiedBy === (i === 0 ? 1 : 0)) {
+                        enemyAdjacent++;
+                    }
+
+                    if (fields[ypos[i][j] - 1] && fields[ypos[i][j] - 1][j].occupiedBy === (i === 0 ? 1 : 0)) {
                         enemyAdjacent++;
                     }
 

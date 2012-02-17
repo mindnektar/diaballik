@@ -59,6 +59,12 @@ body {
     color: #fff;
 }
 
+#endturn.disabled,
+#endturn.disabled:hover {
+    border-color: #777;
+    color: #777;
+}
+
 #turndata .border {
     background: #ccc;
     border-radius: 8px;
