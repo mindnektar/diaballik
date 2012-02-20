@@ -2,8 +2,10 @@ $(function() {
     var $board = $('#board'),
         $container = $('#container'),
         $endTurn = $('#endturn'),
+        $chat,
         fields = [],
         pieces = [],
+        currentDate,
         currentPlayerId = 0,
         currentPieceId,
         movesLeft = 2,
@@ -51,8 +53,11 @@ $(function() {
             html += '<div class="ball p' + i + '" id="ball' + i + '" style="left: 192px; top: ' + (y * 64) + 'px;"><div></div></div>';
         }
 
+        $board.html(html);
+    }
+
+    function initEvents() {
         $board
-            .html(html)
             .bind('contextmenu', function() {
                 return false;
             })
@@ -67,6 +72,35 @@ $(function() {
 
         $('.helper').live('mouseup', doMove);
 
+        $('#chat input')
+            .val('Click to chat')
+            .click(function() {
+                if (this.value === 'Click to chat') {
+                    this.value = '';
+                }
+            })
+            .keyup(function(e) {
+                if (e.which === 13) {
+                    $chat = $chat || $(this).prev();
+
+                    var message = $chat.html(),
+                        d = new Date();
+
+                    if (d.getDate() !== currentDate) {
+                        message += '--- Messages on ' + getDate(d) + ' ---<br />';
+                        currentDate = d.getDate();
+                    }
+
+                    message += '[' + getTime(d) + '] <strong>You: </strong>' + escape(this.value) + '<br />';
+
+                    $chat
+                        .html(message)
+                        .scrollTop($chat.height());
+
+                    this.value = '';
+                }
+            });
+
         $endTurn.click(function() {
             if ($(this).hasClass('disabled')) {
                 return false;
@@ -79,7 +113,7 @@ $(function() {
     function startMove() {
         var playerId = parseInt(this.id.substr(-2, 1));
 
-        if (playerId !== currentPlayerId) {
+        if (playerId !== currentPlayerId || $container.hasClass('gameover')) {
             return true;
         }
 
@@ -314,8 +348,9 @@ $(function() {
             winner = playerId ? 'BLACK' : 'WHITE',
             text = winner + ' WINS!';
 
-        $container.removeClass('p0 p1');
+        $container.addClass('gameover');
         $winner.addClass('p' + playerId);
+        $endTurn.addClass('disabled');
 
         $left
             .text(text)
@@ -332,5 +367,37 @@ $(function() {
         currentPlayerId = -1;
     }
 
+    function getTime(d) {
+        return padWithZeroes(d.getHours()) + ':' +
+            padWithZeroes(d.getMinutes()) + ':' +
+            padWithZeroes(d.getSeconds());
+    }
+
+    function getDate(d) {
+        return padWithZeroes(d.getDate()) + '.' +
+            padWithZeroes(d.getMonth() + 1) + '.' +
+            d.getFullYear();
+    }
+
+    function padWithZeroes(str) {
+        str += '';
+
+        while (str.length < 2) {
+            str = '0' + str;
+        }
+
+        return str;
+    }
+
+    function escape(str) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     initBoard();
+    initEvents();
 });
