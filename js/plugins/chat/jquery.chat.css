@@ -1,0 +1,35 @@
+.chat {
+    background: #777;
+    border: 3px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #000;
+    height: 120px;
+    margin: 0 auto;
+    position: relative;
+    width: 454px;
+}
+
+.chat div {
+    font-size: 12px;
+    height: 92px;
+    overflow-y: scroll;
+    padding: 4px;
+}
+
+.chat input {
+    background: #777;
+    border: none;
+    border-radius: 0 0 5px 5px;
+    border-top: 1px dotted #ccc;
+    bottom: 0;
+    color: #444;
+    left: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+}
+
+.chat input:focus {
+    background: #666;
+    color: #000;
+}
