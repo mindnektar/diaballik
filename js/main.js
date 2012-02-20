@@ -231,7 +231,8 @@ $(function() {
     }
 
     function updateTurnData(values) {
-        $endTurn.toggleClass('disabled', Boolean(passesLeft));
+        // You need to make at least one move or pass per turn
+        $endTurn.toggleClass('disabled', passesLeft + movesLeft === 3);
 
         $.each(values, function(name, value) {
             $('.turn.p' + currentPlayerId + ' .' + name).text(value);

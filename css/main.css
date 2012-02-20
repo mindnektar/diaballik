@@ -4,6 +4,14 @@ body {
     overflow: hidden;
 }
 
+#title {
+    font-size: 60px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    text-shadow: 0 0 5px #444;
+}
+
 #container {
     margin: 20px auto;
     position: relative;
@@ -169,13 +177,13 @@ body {
 
 .winner .right {
     right: -1000px;
-    top: 220px;
+    top: 311px;
     z-index: 10;
 }
 
 .winner .left {
     left: -1000px;
-    top: 216px;
+    top: 307px;
     z-index: 11;
 }
 
